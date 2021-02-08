@@ -1,9 +1,11 @@
 import axios, { AxiosInstance } from 'axios';
+import { Product } from './product/product';
 
-const endpoint = 'https://ms.ah.nl/mobile-services/';
+const endpoint = 'https://www.ah.nl/';
 
 export class AH {
     private readonly client: AxiosInstance;
+    private readonly ahProduct: Product;
 
     constructor(
         private readonly username?: string,
@@ -12,6 +14,11 @@ export class AH {
     ) {
         // Create https agent for TLSv1.2 or less (API doesn't respond to TLSv1.3+)
         this.client = axios.create();
+        this.ahProduct = new Product(this, false);
+    }
+
+    product() {
+        return this.ahProduct;
     }
 
     async post(
@@ -69,7 +76,6 @@ export class AH {
         if (this.verbose) {
             console.log(url);
             console.log(method);
-            console.log(requestMethod);
             void (body && console.log(body));
         }
 
@@ -149,3 +155,4 @@ export interface Query {
 export interface Headers {
     [key: string]: string;
 }
+// helppp

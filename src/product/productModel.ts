@@ -1,234 +1,170 @@
 export interface ProductModel {
-    disclaimerText: string;
-    productCard: Product;
-    productId: number;
-    properties: Properties2;
-    tradeItem: TradeItem;
+    card: Card;
 }
 
-interface TradeItem {
-    additionalTradeItemIdentification: AdditionalTradeItemIdentification[];
-    allergenInformation: AllergenInformation[];
-    certificationInformation: any[];
-    consumerInstructions: ConsumerInstructions;
-    contactInformation: ContactInformation[];
-    description: Description;
-    foodAndBeveragePreparationServing: FoodAndBeveragePreparationServing;
+interface Card {
+    type: string;
+    id: number;
+    products: Product[];
+    meta: Meta;
+}
+
+interface Meta {
     gln: string;
     gtin: string;
-    healthWellnessPackagingMarking: HealthWellnessPackagingMarking;
-    lifespan: Lifespan;
-    measurements: Measurements;
-    nutritionalInformation: NutritionalInformation;
-    packagingMarking: PackagingMarking;
-    placeOfItemActivity: PlaceOfItemActivity;
-    referencedFileDetailInformation: any[];
-    regulatoryInformation: RegulatoryInformation[];
-    safetyDataSheetInformation: any[];
+    description: Description;
+    nutritions: Nutrition[];
+    contents: Contents;
+    ingredients: Ingredients;
+    storage: Storage;
+    contact: Contact;
+    resources: Resources;
 }
 
-interface RegulatoryInformation {
-    permitIdentification: any[];
-    regulationTypeCode: TypeCode[];
+interface Resources {
+    attachments: any[];
+    icons: Icon[];
 }
 
-interface PlaceOfItemActivity {
-    placeOfProductActivity: PlaceOfProductActivity;
+interface Icon {
+    type: string;
+    id: string;
+    title: string;
 }
 
-interface PlaceOfProductActivity {
-    productActivityDetails: any[];
-    provenanceStatement: any[];
-}
-
-interface PackagingMarking {
-    labelAccreditationCode: any[];
-    localPackagingMarkedLabelAccreditationCodeReference: LocalPackagingMarkedLabelAccreditationCodeReference[];
-}
-
-interface LocalPackagingMarkedLabelAccreditationCodeReference {
-    label?: string;
-    value: string;
-}
-
-interface NutritionalInformation {
-    nutrientHeaders: NutrientHeader[];
-    nutritionalClaim: any[];
-}
-
-interface NutrientHeader {
-    dailyValueIntakeReference: string[];
-    nutrientBasisQuantity: NetContent;
-    nutrientBasisQuantityDescription: string[];
-    nutrientDetail: NutrientDetail[];
-    preparationStateCode: TypeCode;
-}
-
-interface NutrientDetail {
-    measurementPrecisionCode: TypeCode;
-    nutrientSource: string[];
-    nutrientTypeCode: TypeCode;
-    quantityContained: NetContent[];
-    dailyValueIntakePercent?: number;
-}
-
-interface Measurements {
-    netContent: NetContent[];
-    weight: Weight;
-}
-
-interface Weight {}
-
-interface NetContent {
-    measurementUnitCode: TypeCode;
-    value: number;
-}
-
-interface Lifespan {
-    itemPeriodSafeToUseAfterOpening: any[];
-}
-
-interface HealthWellnessPackagingMarking {
-    packagingMarkedDietAllergenCode: any[];
-    packagingMarkedFreeFromCode: TypeCode[];
-}
-
-interface FoodAndBeveragePreparationServing {
-    preparationServing: any[];
-    servingQuantityInformation: ServingQuantityInformation;
-}
-
-interface ServingQuantityInformation {
-    numberOfServingsPerPackage: number;
-}
-
-interface Description {
-    regulatedProductName: string[];
-}
-
-interface ContactInformation {
-    contactAddress: string;
-    contactName: string;
-    contactTypeCode: TypeCode;
-    targetMarketCommunicationChannel: TargetMarketCommunicationChannel[];
-}
-
-interface TargetMarketCommunicationChannel {
-    communicationChannel: CommunicationChannel[];
+interface Contact {
+    name: string;
+    address: string;
+    communicationChannels: CommunicationChannel[];
 }
 
 interface CommunicationChannel {
-    code: TypeCode;
+    type: string;
     value: string;
 }
 
-interface ConsumerInstructions {
-    storageInstructions: string[];
-    usageInstructions: any[];
+interface Storage {
+    instructions: string[];
+    lifeSpan: any[];
 }
 
-interface AllergenInformation {
-    items: Item[];
+interface Ingredients {
+    allergens: Allergens;
 }
 
-interface Item {
-    levelOfContainmentCode: TypeCode;
-    typeCode: TypeCode;
+interface Allergens {
+    list: any[];
+    contains: string[];
+    mayContain: any[];
+    freeFrom: string[];
 }
 
-interface AdditionalTradeItemIdentification {
-    typeCode: TypeCode;
-    value: string;
+interface Contents {
+    netContents: string[];
+    servingSize: string;
+    servingsPerPackage: string;
+    eMark: boolean;
 }
 
-interface TypeCode {
+interface Nutrition {
+    nutrients: Nutrient[];
+    additionalInfo: AdditionalInfo[];
+    dailyValueIntakeReference: string;
+    servingSize: string;
+    servingSizeDescription: string;
+    preparationState: string;
+    basisQuantity: string;
+    basisQuantityDescription: string;
+}
+
+interface AdditionalInfo {
     label: string;
     value: string;
 }
 
-interface Properties2 {
-    nutriscore: string[];
-    sp_exclude_dieet_biologisch: string[];
-    sp_exclude_dieet_laag_suiker: string[];
-    sp_exclude_dieet_veganistisch: string[];
-    sp_exclude_intolerance_geen_lactose: string[];
-    sp_exclude_intolerance_geen_melk: string[];
-    sp_include_dieet_laag_vet: string[];
-    sp_include_dieet_laag_zout: string[];
-    sp_include_dieet_vegetarisch: string[];
-    sp_include_intolerance_geen_eieren: string[];
-    sp_include_intolerance_geen_gluten: string[];
-    sp_include_intolerance_geen_kreeftachtigen: string[];
-    sp_include_intolerance_geen_lupine: string[];
-    sp_include_intolerance_geen_mosterd: string[];
-    sp_include_intolerance_geen_noten: string[];
-    sp_include_intolerance_geen_pindas: string[];
-    sp_include_intolerance_geen_schelpdieren: string[];
-    sp_include_intolerance_geen_selderij: string[];
-    sp_include_intolerance_geen_sesam: string[];
-    sp_include_intolerance_geen_soja: string[];
-    sp_include_intolerance_geen_sulfiet: string[];
-    sp_include_intolerance_geen_vis: string[];
+interface Nutrient {
+    name: string;
+    type: string;
+    value: string;
+    dailyValue: string;
+    superscript?: number;
 }
 
-export interface Product {
-    availableOnline: boolean;
-    brand: string;
-    descriptionFull: string;
-    descriptionHighlights: string;
-    extraDescriptions: any[];
-    hqId: number;
-    images: Image[];
-    isBonus: boolean;
-    isInfiniteBonus: boolean;
-    isOrderable: boolean;
-    isPreviouslyBought: boolean;
-    isSample: boolean;
-    isStapelBonus: boolean;
-    mainCategory: string;
-    nix18: boolean;
-    orderAvailabilityStatus: string;
-    priceBeforeBonus: number;
-    properties: Properties;
-    propertyIcons: string[];
-    salesUnitSize: string;
-    shopType: string;
-    subCategory: string;
-    subCategoryId: number;
+interface Description {
+    descriptions: string[];
+}
+
+interface Product {
+    id: number;
+    control: Control;
     title: string;
-    unitPriceDescription: string;
-    webshopId: number;
+    link: string;
+    availableOnline: boolean;
+    orderable: boolean;
+    propertyIcons: PropertyIcon[];
+    images: Image[];
+    price: Price;
+    itemCatalogId: number;
+    brand: string;
+    category: string;
+    theme: string;
+    hqId: number;
+    gtins: number[];
+    summary: string;
+    descriptionFull: string;
+    taxonomyId: number;
+    taxonomies: Taxonomy[];
+    contributionMargin: number;
+    properties: Properties;
 }
 
 interface Properties {
-    np_goedkoopje: string[];
-    np_verpakking: string[];
-    nutriscore: string[];
-    sp_exclude_dieet_biologisch: string[];
-    sp_exclude_dieet_laag_suiker: string[];
-    sp_exclude_dieet_veganistisch: string[];
-    sp_exclude_intolerance_geen_lactose: string[];
-    sp_exclude_intolerance_geen_melk: string[];
-    sp_include_dieet_laag_vet: string[];
-    sp_include_dieet_laag_zout: string[];
-    sp_include_dieet_vegetarisch: string[];
-    sp_include_intolerance_geen_eieren: string[];
-    sp_include_intolerance_geen_gluten: string[];
-    sp_include_intolerance_geen_kreeftachtigen: string[];
-    sp_include_intolerance_geen_lupine: string[];
-    sp_include_intolerance_geen_mosterd: string[];
-    sp_include_intolerance_geen_noten: string[];
-    sp_include_intolerance_geen_pindas: string[];
-    sp_include_intolerance_geen_schelpdieren: string[];
-    sp_include_intolerance_geen_selderij: string[];
-    sp_include_intolerance_geen_sesam: string[];
-    sp_include_intolerance_geen_soja: string[];
-    sp_include_intolerance_geen_sulfiet: string[];
-    sp_include_intolerance_geen_vis: string[];
+    nutriscore: string;
+    lifestyle: string[];
+}
+
+interface Taxonomy {
+    id: number;
+    name: string;
+    imageSiteTarget?: string;
+    images: Image2[];
+    shown: boolean;
+    level: number;
+    sortSequence: number;
+    parentIds: number[];
+}
+
+interface Image2 {
+    height: number;
+    width: number;
+    url: string;
+}
+
+interface Price {
+    unitInfo: UnitInfo;
+    now: number;
+    unitSize: string;
+}
+
+interface UnitInfo {
+    price: number;
+    description: string;
 }
 
 interface Image {
     height: number;
-    url: string;
     width: number;
+    title: string;
+    url: string;
+    ratio: string;
+}
+
+interface PropertyIcon {
+    name: string;
+    title: string;
+}
+
+interface Control {
+    theme: string;
+    type: string;
 }
