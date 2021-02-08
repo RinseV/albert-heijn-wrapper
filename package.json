@@ -1,0 +1,23 @@
+{
+  "name": "albert-heijn-wrapper",
+  "version": "1.0.0",
+  "description": "API wrapper for Albert Heijn",
+  "main": "src/ah.ts",
+  "author": "RinseV",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/ah.ts"
+  },
+  "dependencies": {
+    "axios": "^0.21.1"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.25",
+    "@types/node-fetch": "^2.5.8",
+    "dotenv": "^8.2.0",
+    "ts-node": "^9.1.1",
+    "tsc": "^1.20150623.0",
+    "typescript": "^4.1.3"
+  }
+}
