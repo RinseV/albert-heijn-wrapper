@@ -1,8 +1,8 @@
 import { AH } from './ah';
 
 async function main() {
-    const ah = new AH(undefined, undefined, true);
-    const product = await ah.product().getProductFromId(0); // Should return Zaanse Melk
+    const ah = new AH(true);
+    const product = await ah.product().getFirstProductFromName('melk');
     console.log(product);
 }
 

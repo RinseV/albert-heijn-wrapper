@@ -11,7 +11,8 @@
     "start": "ts-node src/ah.ts"
   },
   "dependencies": {
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "date-fns": "^2.17.0"
   },
   "devDependencies": {
     "@types/node": "^14.14.25",

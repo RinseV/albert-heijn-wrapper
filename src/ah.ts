@@ -1,24 +1,32 @@
 import axios, { AxiosInstance } from 'axios';
+import { TokenHandler } from './auth/tokenHandler';
 import { Product } from './product/product';
+import { Store } from './store/store';
 
-const endpoint = 'https://www.ah.nl/';
+const endpoint = 'https://ms.ah.nl/';
 
 export class AH {
     private readonly client: AxiosInstance;
-    private readonly ahProduct: Product;
+    private readonly tokenHandler: TokenHandler;
 
-    constructor(
-        private readonly username?: string,
-        private readonly password?: string,
-        private readonly verbose?: boolean
-    ) {
+    private readonly AHProduct: Product;
+    private readonly AHStore: Store;
+
+    constructor(private readonly verbose?: boolean) {
         // Create https agent for TLSv1.2 or less (API doesn't respond to TLSv1.3+)
         this.client = axios.create();
-        this.ahProduct = new Product(this, false);
+        this.tokenHandler = new TokenHandler(this);
+
+        this.AHProduct = new Product(this);
+        this.AHStore = new Store(this);
     }
 
     product() {
-        return this.ahProduct;
+        return this.AHProduct;
+    }
+
+    store() {
+        return this.AHStore;
     }
 
     async post(
@@ -26,7 +34,7 @@ export class AH {
         body: any,
         extraHeaders?: Headers,
         query?: Query,
-        authRequired?: boolean
+        noAuth?: boolean
     ) {
         return this.request(
             path,
@@ -34,7 +42,7 @@ export class AH {
             body,
             extraHeaders,
             query,
-            authRequired
+            noAuth
         );
     }
 
@@ -42,7 +50,7 @@ export class AH {
         path: string,
         extraHeaders?: Headers,
         query?: Query,
-        authRequired?: boolean
+        noAuth?: boolean
     ) {
         return this.request(
             path,
@@ -50,7 +58,7 @@ export class AH {
             undefined,
             extraHeaders,
             query,
-            authRequired
+            noAuth
         );
     }
 
@@ -60,29 +68,34 @@ export class AH {
         body?: any,
         extraHeaders?: Headers,
         query?: Query,
-        authRequired?: boolean
+        noAuth?: boolean
     ) {
-        if (authRequired) {
-            // skip for now
+        let token;
+        if (!noAuth) {
+            // Make sure tokenHandler is ready (has a token)
+            await this.tokenHandler.Ready;
+            token = await this.tokenHandler.getToken();
         }
 
+        // Since a token is needed for every request, just always add it
         let requestHeader: Headers = this.createHeader(
-            authRequired,
+            token?.access_token,
             extraHeaders
         );
 
-        let url: string = this.createURL(path, query);
+        let url = this.createURL(path, query);
 
         if (this.verbose) {
             console.log(url);
             console.log(method);
+            console.log(requestHeader);
             void (body && console.log(body));
         }
 
         let response = await this.client.request({
             method: method,
             url: url,
-            headers: requestMethod,
+            headers: requestHeader,
             data: body,
         });
 
@@ -98,19 +111,17 @@ export class AH {
      * Helper function to create headers for request
      * @param extraHeaders Any extra header options
      */
-    createHeader(authRequired?: boolean, extraHeaders?: Headers): Headers {
+    createHeader(token?: string, extraHeaders?: Headers): Headers {
         // Create header
         let headers: Headers = {
             'Content-Type': 'application/json',
-            'User-Agent': 'jumbo-wrapper',
+            'User-Agent': 'ah-wrapper',
             ...extraHeaders,
         };
-        // TODO: auth
-        // if (authRequired && this.tokenHandler) {
-        //     headers['x-jumbo-token'] = this.tokenHandler.getToken();
-        // } else if (authRequired && !this.tokenHandler) {
-        //     throw new Error('You must be logged in to use this function');
-        // }
+
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
 
         // Return the headers
         return headers;
@@ -155,4 +166,3 @@ export interface Query {
 export interface Headers {
     [key: string]: string;
 }
-// helppp
