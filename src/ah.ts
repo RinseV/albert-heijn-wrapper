@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import { TokenHandler } from './auth/tokenHandler';
 import { Product } from './product/product';
+import { Recipe } from './recipe/recipe';
 import { Store } from './store/store';
 
 const endpoint = 'https://ms.ah.nl/';
@@ -10,6 +11,7 @@ export class AH {
     private readonly tokenHandler: TokenHandler;
 
     private readonly AHProduct: Product;
+    private readonly AHRecipe: Recipe;
     private readonly AHStore: Store;
 
     constructor(private readonly verbose?: boolean) {
@@ -18,11 +20,16 @@ export class AH {
         this.tokenHandler = new TokenHandler(this);
 
         this.AHProduct = new Product(this);
+        this.AHRecipe = new Recipe(this);
         this.AHStore = new Store(this);
     }
 
     product() {
         return this.AHProduct;
+    }
+
+    recipe() {
+        return this.AHRecipe;
     }
 
     store() {

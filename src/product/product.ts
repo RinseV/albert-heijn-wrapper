@@ -23,11 +23,18 @@ export class Product extends AHObject {
         headers?: Headers,
         query?: Query
     ): Promise<ProductQueryModel> {
-        // TODO: query fields should not be there if no query
-        return await this.ah.get(`mobile-services/product/search/v2`, headers, {
+        // We make a new query since we can only have the 'sortOn' and 'filters' fields if those options are provided
+        const totalQuery: Query = {
             query: productName,
-            sortOn: (sort ? sort : '').toString(),
-            filters: filter ? this.translateProductFilterToQuery(filter) : '',
+        };
+        if (sort) {
+            totalQuery['sortOn'] = sort.toString();
+        }
+        if (filter) {
+            totalQuery['filters'] = this.translateProductFilterToQuery(filter);
+        }
+        return await this.ah.get(`mobile-services/product/search/v2`, headers, {
+            ...totalQuery,
             ...query,
         });
     }
@@ -89,4 +96,29 @@ export enum ProductPropertyFilter {
     New = 'np_nieuw',
     BulkSize = 'np_voordeel',
     Freezer = 'diepvries',
+    Conscious = 'sp_bewust',
+    Ecological = 'np_ecologisch',
+    Etos = 'np_etos',
+    Fairtrade = 'np_fairtrade',
+    PureHonest = 'np_puureerlij',
+    Kids = 'np_kids',
+    EggFree = 'sp_include_intolerance_geen_eieren',
+    GlutenFree = 'sp_include_intolerance_geen_gluten',
+    LactoseFree = 'sp_include_intolerance_geen_lactose',
+    LupineFree = 'sp_include_intolerance_geen_lupine',
+    MilkFree = 'sp_include_intolerance_geen_melk',
+    MustardFree = 'sp_include_intolerance_geen_mosterd',
+    NutFree = 'sp_include_intolerance_geen_noten',
+    PeanutFree = 'sp_include_intolerance_geen_pindas',
+    ShellfishFree = 'sp_include_intolerance_geen_schelpdieren',
+    CeleryFree = 'sp_include_intolerance_geen_selderij',
+    SesameFree = 'sp_include_intolerance_geen_sesam',
+    SoyFree = 'sp_include_intolerance_geen_soja',
+    SulfiteFree = 'sp_include_intolerance_geen_sulfiet',
+    FishFree = 'sp_include_intolerance_geen_vis',
+    LowSugarDiet = 'sp_include_dieet_laag_suiker',
+    LowFatDiet = 'sp_include_dieet_laag_vet',
+    LowSaltDiet = 'sp_include_dieet_laag_zout',
+    Vegan = 'sp_include_dieet_veganistisch',
+    Vegeterian = 'sp_include_dieet_vegetarisch',
 }

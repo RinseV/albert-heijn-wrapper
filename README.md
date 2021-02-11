@@ -47,6 +47,20 @@ AH.store().getStoresFromLocation(latitude, longitude, maxResults);
 AH.store().getClosestStoreFromLocation(latitude, longitude);
 ```
 
+#### Recipes
+```javascript
+AH.recipe().getRecipeFromId(recipeId);
+AH.recipe().getRecipeFromName(recipeName, filter, sort);
+AH.recipe().getFirstRecipeFromName(recipeName, filter, sort);
+```
+
+### Filtering and sorting
+#### Products
+It is possible to use certain product filters and sort options, these are provided via the ``ProductFilter`` and ``ProductSortOptions`` interface and enum respectively. The following sort options are available for products: relevant, price descending, price ascending. Products can also be filtered by brand (name), type (number), properties (described in ``ProductPropertyFilter``) and whether they are currently in the bonus or not.
+
+#### Recipes
+It is possible to use certain recipe filters and sort options, these are provided via the RecipeFilter and RecipeSortOptions interface and enum respectively. The following sort options are available for products: newest, relevant, rating, preperation time. Recipes can also be filtered via enums, namely ``OftenUsedRecipeFilterOptions``, ``CourseRecipeFilterOptions``, ``DishTypeRecipeFilterOptions``, ``ContentRecipeFilterOptions``, ``WishesRecipeFilterOptions``, ``SpecialOccasionRecipeFilterOptions``, ``SeasonRecipeFilterOptions``, ``TechniqueRecipeFilterOptions`` and ``KitchenOriginRecipeFilterOptions``.
+
 ### Advanced usage
 Every request can also be provided with additional headers and queries.
 
