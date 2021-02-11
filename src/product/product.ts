@@ -18,8 +18,8 @@ export class Product extends AHObject {
 
     async getProductsFromName(
         productName: string,
-        sort?: ProductSortOptions,
         filter?: ProductFilter,
+        sort?: ProductSortOptions,
         headers?: Headers,
         query?: Query
     ): Promise<ProductQueryModel> {
@@ -41,15 +41,15 @@ export class Product extends AHObject {
 
     async getFirstProductFromName(
         productName: string,
-        sort?: ProductSortOptions,
         filter?: ProductFilter,
+        sort?: ProductSortOptions,
         headers?: Headers,
         query?: Query
     ): Promise<ProductModel> {
         const products = await this.getProductsFromName(
             productName,
-            sort,
             filter,
+            sort,
             headers,
             query
         );

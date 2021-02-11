@@ -1,10 +1,10 @@
 export interface StoreQueryModel {
     favouriteStores: any[];
     filters: Filter[];
-    stores: Store[];
+    stores: StoreModel[];
 }
 
-interface Store {
+export interface StoreModel {
     address: Address;
     fax?: string;
     floorSpace: number;
@@ -28,10 +28,16 @@ interface Service {
     shortDescription: string;
 }
 
-interface OpeningHour {
+export interface OpeningHour {
     date: string;
     openFrom: string;
     openUntil: string;
+}
+
+export interface OpeningHourDate {
+    date: Date;
+    openFrom: Date;
+    openUntil: Date;
 }
 
 interface GeoLocation {
