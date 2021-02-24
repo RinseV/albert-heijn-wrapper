@@ -4,6 +4,10 @@ import { ProductModel, SingleProductModel } from './productModel';
 import { ProductQueryModel } from './productQueryModel';
 
 export class Product extends AHObject {
+    /**
+     * Get product from ID
+     * @param productId Product ID
+     */
     async getProductFromId(
         productId: number,
         headers?: Headers,
@@ -16,6 +20,12 @@ export class Product extends AHObject {
         );
     }
 
+    /**
+     * Get products from given product name
+     * @param productName Product name to search for
+     * @param filter Producter filter (from ProductFilter)
+     * @param sort Sort options (from ProductSortOptions)
+     */
     async getProductsFromName(
         productName: string,
         filter?: ProductFilter,
@@ -39,6 +49,12 @@ export class Product extends AHObject {
         });
     }
 
+    /**
+     * Shortcut function to get the first product when searching for a name
+     * @param productName Product name to search for
+     * @param filter Producter filter (from ProductFilter)
+     * @param sort Sort options (from ProductSortOptions)
+     */
     async getFirstProductFromName(
         productName: string,
         filter?: ProductFilter,
@@ -77,12 +93,22 @@ export class Product extends AHObject {
     }
 }
 
+/**
+ * 3 currently available sort options for products
+ */
 export enum ProductSortOptions {
     Relevant = 'RELEVANCE',
     PriceDesc = 'PRICEHIGHLOW',
     PriceAsc = 'PRICELOWHIGH',
 }
 
+/**
+ * Currently available filters
+ * brand: simply a string of the brand (including spaces and capital letters)
+ * type: as defined by AH
+ * property: can be filtered from ProductPropertyFilter
+ * bonus: whether the product is currently in the bonus or not
+ */
 export interface ProductFilter {
     brand?: string;
     type?: number;

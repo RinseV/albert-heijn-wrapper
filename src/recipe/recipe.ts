@@ -4,6 +4,10 @@ import { RecipeModel } from './recipeModel';
 import { RecipeQueryModel } from './recipeQueryModel';
 
 export class Recipe extends AHObject {
+    /**
+     * Get recipe from ID
+     * @param recipeId Recipe ID
+     */
     async getRecipeFromId(
         recipeId: number,
         headers?: Headers,
@@ -16,6 +20,12 @@ export class Recipe extends AHObject {
         );
     }
 
+    /**
+     * Get recipes from given recipe name
+     * @param recipeName Recipe name to search for
+     * @param filter Recipe filters (from RecipeFilter)
+     * @param sort Recipe sort (from RecipeSortOptions)
+     */
     async getRecipeFromName(
         recipeName: string,
         filter?: RecipeFilter,
@@ -31,6 +41,12 @@ export class Recipe extends AHObject {
         });
     }
 
+    /**
+     * Shortcut function to get the first recipe when searching for name
+     * @param recipeName Recipe name to search for
+     * @param filter Recipe filters (from RecipeFilter)
+     * @param sort Recipe sort (from RecipeSortOptions)
+     */
     async getFirstRecipeFromName(
         recipeName: string,
         filter?: RecipeFilter,
@@ -91,6 +107,9 @@ export class Recipe extends AHObject {
     }
 }
 
+/**
+ * The 4 recipe sort options currently available
+ */
 export enum RecipeSortOptions {
     Newest = 'NEWEST',
     Relevant = 'MOST_RELEVANT',
@@ -98,8 +117,11 @@ export enum RecipeSortOptions {
     PrepTime = 'TOTAl_TIME',
 }
 
+/**
+ * All recipe filter options.
+ * IMPORTANT: you can only use 1 filter at a time
+ */
 export interface RecipeFilter {
-    // Can only have 1 active at a time
     oftenUsedFilter?: OftenUsedRecipeFilterOptions;
     courseFilter?: CourseRecipeFilterOptions;
     dishTypeFilter?: DishTypeRecipeFilterOptions;
