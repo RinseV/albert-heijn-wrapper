@@ -111,7 +111,8 @@ getGlutenFreeVeganBread();
 #### Stores
 Let's say I want to find the nearest store's opening times for tomorrow from a user-given location:
 ```javascript
-import { AH, convertOpeningHoursToDates } from 'albert-heijn-wrapper';
+import { AH } from 'albert-heijn-wrapper';
+import { convertOpeningHoursToDates } from 'albert-heijn-wrapper/dist/store/store';
 import { isTomorrow } from 'date-fns';
 
 async function findTomorrowStoreOpeningTimesFromLocation(latitude: number, longitude: number) {
@@ -119,8 +120,6 @@ async function findTomorrowStoreOpeningTimesFromLocation(latitude: number, longi
     const ah = new AH(true);
     // Find nearest store
     const store = await ah.store().getClosestStoreFromLocation(latitude, longitude);
-    // Get today's date
-    const today = new Date();
     // The convertOpeningHoursToDates is a helper function that changes the openingHours to Date objects
     const openingTimes = convertOpeningHoursToDates(store.openingHours);
     // Find the openingTimes of tomorrow and log them
@@ -133,9 +132,9 @@ findTomorrowStoreOpeningTimesFromLocation(50, 4);
 ```sh
 [
   {
-    date: 2021-02-11T23:00:00.000Z,
-    openFrom: 2021-02-12T07:00:00.000Z,
-    openUntil: 2021-02-12T19:00:00.000Z
+    date: 2021-02-24T23:00:00.000Z,
+    openFrom: 2021-02-25T07:00:00.000Z,
+    openUntil: 2021-02-25T19:00:00.000Z
   }
 ]
 ```

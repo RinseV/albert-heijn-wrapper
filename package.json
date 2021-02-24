@@ -2,7 +2,7 @@
   "name": "albert-heijn-wrapper",
   "version": "1.0.0",
   "description": "API wrapper for Albert Heijn",
-  "main": "src/ah.ts",
+  "main": "dist/ah.js",
   "author": "RinseV",
   "license": "MIT",
   "scripts": {

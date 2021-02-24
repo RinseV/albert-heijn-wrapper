@@ -1,0 +1,10 @@
+app
+.env
+.env.local
+src
+.eslintrc
+.gitignore
+.npmignore
+.prettierrc
+yarn-error.log
+node_modules/

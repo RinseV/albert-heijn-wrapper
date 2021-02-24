@@ -1,6 +1,6 @@
 import { AHObject } from '../base/AHObject';
 import { Headers, Query } from '../ah';
-import { ProductModel } from './productModel';
+import { ProductModel, SingleProductModel } from './productModel';
 import { ProductQueryModel } from './productQueryModel';
 
 export class Product extends AHObject {
@@ -8,7 +8,7 @@ export class Product extends AHObject {
         productId: number,
         headers?: Headers,
         query?: Query
-    ): Promise<ProductModel> {
+    ): Promise<SingleProductModel> {
         return await this.ah.get(
             `mobile-services/product/detail/v4/fir/${productId}`,
             headers,

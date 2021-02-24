@@ -18,14 +18,14 @@ export class Store extends AHObject {
     async getStoresFromLocation(
         latitude: number,
         longitude: number,
-        maxResults: number,
+        maxResults?: number,
         headers?: Headers,
         query?: Query
     ): Promise<StoreQueryModel> {
         return await this.ah.get(`mobile-services/v1/stores`, headers, {
             latitude: latitude.toString(),
             longitude: longitude.toString(),
-            maxResults: maxResults.toString(),
+            maxResults: (maxResults ? maxResults : 12).toString(),
             ...query,
         });
     }

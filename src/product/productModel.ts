@@ -1,6 +1,6 @@
-export interface ProductModel {
+export interface SingleProductModel {
     disclaimerText: string;
-    productCard: ProductModel;
+    productCard: SingleProductModel;
     productId: number;
     properties: Properties2;
     tradeItem: TradeItem;
