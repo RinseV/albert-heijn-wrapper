@@ -4,7 +4,12 @@
   </h1>
   </br>
   <p>
-    <!-- Badges here -->
+    <a href="https://www.npmjs.com/package/albert-heijn-wrapper"><img src="https://img.shields.io/npm/v/albert-heijn-wrapper" alt="NPM version" /></a>
+    <a href="https://github.com/RinseV/albert-heijn-wrapper"><img src="https://img.shields.io/npm/l/albert-heijn-wrapper" alt="NPM license" /></a>
+    <a href="https://www.npmjs.com/package/albert-heijn-wrapper"><img src="https://img.shields.io/librariesio/release/npm/albert-heijn-wrapper" alt="NPM dependencies"/></a>
+  </p>
+  <p>
+    <a href="https://nodei.co/npm/albert-heijn-wrapper/"><img src="https://nodei.co/npm/albert-heijn-wrapper.svg" alt="npm installnfo" /></a>
   </p>
 </div>
 
