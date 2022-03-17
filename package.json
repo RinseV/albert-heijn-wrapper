@@ -1,6 +1,6 @@
 {
     "name": "albert-heijn-wrapper",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "API wrapper for Albert Heijn",
     "keywords": [
         "albert",
@@ -8,7 +8,7 @@
         "albert heijn"
     ],
     "main": "dist/index.js",
-    "types": "dist/ah.d.ts",
+    "types": "dist/index.d.ts",
     "author": "RinseV",
     "license": "MIT",
     "scripts": {
