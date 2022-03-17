@@ -15,8 +15,6 @@
 
 Node.js API wrapper for [Albert Heijn](https://www.ah.nl/).
 
-This package is still a work in progress.
-
 ## Installation
 ```sh
 npm install albert-heijn-wrapper
@@ -76,7 +74,7 @@ It is possible to use certain recipe filters and sort options, these are provide
 
 ### Example usage
 #### Products
-Let's say I want to find the names of the products called "Brood" but the products have to be gluten free, vegan and of the brand "AH Vrij van" and I want to sort on ascending price:
+Let's say I want to find the names of the products called "Brood" but the products have to be gluten free, vegan and of the brand "AH Glutenvrij" and I want to sort on ascending price:
 ```javascript
 import { 
   AH,
@@ -87,10 +85,10 @@ import {
 
 async function getGlutenFreeVeganBread() {
   // First create an AH object
-  const ah = new AH(true);
+  const ah = new AH();
   // Initialise the filter with the brand and properties (gluten free and vegan)
   const filter: ProductFilter = {
-      brand: 'AH Vrij van',
+      brand: 'AH Glutenvrij',
       property: [
           ProductPropertyFilter.GlutenFree,
           ProductPropertyFilter.Vegan,
@@ -110,42 +108,34 @@ async function getGlutenFreeVeganBread() {
 getGlutenFreeVeganBread();
 ```
 ```sh
-[ 'AH Vrij van Gluten voor broodmix' ]
+[
+  'AH Glutenvrij Pistolets meerzaden',
+  'AH Glutenvrij Mueslibroodjes',
+  'AH Glutenvrij Vezelrijke broodmix'
+]
 ```
 
 #### Stores
-Let's say I want to find the nearest store's opening times for tomorrow from a user-given location:
+Let's say I want to find the address of the nearest store to a given location:
 ```javascript
 import { AH } from 'albert-heijn-wrapper';
-import { convertOpeningHoursToDates } from 'albert-heijn-wrapper/dist/store/store';
-import { isTomorrow } from 'date-fns';
 
-async function findTomorrowStoreOpeningTimesFromLocation(latitude: number, longitude: number) {
+async function findNearestStore(latitude: number, longitude: number) {
     // Create AH object
     const ah = new AH(true);
     // Find nearest store
     const store = await ah.store().getClosestStoreFromLocation(latitude, longitude);
-    // The convertOpeningHoursToDates is a helper function that changes the openingHours to Date objects
-    const openingTimes = convertOpeningHoursToDates(store.openingHours);
-    // Find the openingTimes of tomorrow and log them
-    const tomorrow = openingTimes.filter((date) => isTomorrow(date.date));
-    console.log(tomorrow);
+    console.log(`${store.address.street} ${store.address.houseNumber}, ${store.address.postalCode}`);
 }
 
-findTomorrowStoreOpeningTimesFromLocation(50, 4);
+findNearestStore(50, 4);
 ```
 ```sh
-[
-  {
-    date: 2021-02-24T23:00:00.000Z,
-    openFrom: 2021-02-25T07:00:00.000Z,
-    openUntil: 2021-02-25T19:00:00.000Z
-  }
-]
+Wilhelminalaan 9, 4551EP
 ```
 
 ### Advanced usage
 Every request can also be provided with additional headers and queries.
 
 ## Auth
-Unfortunately, it is not possible to log in with your personal AH account (as of yet), which means you won't be able to access your orders.
+Unfortunately, it is not possible to log in with your personal AH account, which means you won't be able to access your orders.

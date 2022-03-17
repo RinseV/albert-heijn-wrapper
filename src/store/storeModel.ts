@@ -1,69 +1,51 @@
 export interface StoreQueryModel {
-    favouriteStores: any[];
-    filters: Filter[];
-    stores: StoreModel[];
+    data: StoreData;
+}
+
+export interface StoreData {
+    stores: Stores;
+}
+
+export interface Stores {
+    result: StoreModel[];
 }
 
 export interface StoreModel {
     address: Address;
-    fax?: string;
-    floorSpace: number;
-    formatCode: string;
     geoLocation: GeoLocation;
     id: number;
-    name: string;
-    openingHours: OpeningHour[];
-    operatingCompanyCode: string;
-    salesFormulaDescription: string;
-    salesFormulaNumber: number;
-    services: Service[];
-    sizeCode: string;
-    storeType: string;
-    telephoneNumber: string;
+    openingDays: OpeningDay[];
+    phone: string;
+    storeType: 'XL' | 'REGULAR' | 'TOGO';
 }
 
-interface Service {
-    code: string;
-    description: string;
-    shortDescription: string;
-}
-
-export interface OpeningHour {
-    date: string;
-    openFrom: string;
-    openUntil: string;
-}
-
-export interface OpeningHourDate {
-    date: Date;
-    openFrom: Date;
-    openUntil: Date;
-}
-
-interface GeoLocation {
-    geocoderPrecision: number;
-    latitude: number;
-    longitude: number;
-}
-
-interface Address {
+export interface Address {
     city: string;
     countryCode: string;
     houseNumber: string;
+    houseNumberExtra: string;
     postalCode: string;
     street: string;
 }
 
-interface Filter {
-    booleanFilter: boolean;
-    label: string;
-    options: Option[];
-    type: string;
+export interface GeoLocation {
+    latitude: number;
+    longitude: number;
 }
 
-interface Option {
-    count: number;
-    display: boolean;
-    id: string;
-    label: string;
+export interface NextWeekOpeningHour {
+    openFrom: string;
+    openUntil: string;
+}
+
+export interface OpeningHour {
+    openFrom: string;
+    openUntil: string;
+}
+
+export interface OpeningDay {
+    date: string;
+    nextWeekDate: string;
+    nextWeekOpeningHour: NextWeekOpeningHour;
+    openingHour: OpeningHour;
 }

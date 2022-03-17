@@ -1,11 +1,11 @@
 export interface RecipeModel {
-    courseTypes: any[];
+    courseTypes: unknown[];
     courses: string[];
     description: string;
     favourite: boolean;
     id: number;
     ingredients: Ingredient[];
-    kitchenAppliances: any[];
+    kitchenAppliances: unknown[];
     maxServingsNumber: number;
     minServingsNumber: number;
     nutricionalValues: NutricionalValue[];
@@ -20,8 +20,8 @@ export interface RecipeModel {
     shoppable: boolean;
     stepByStepQuality: string;
     tagCloud: string[];
-    tastyWith: any[];
-    tips: any[];
+    tastyWith: unknown[];
+    tips: unknown[];
     title: string;
 }
 
@@ -45,7 +45,7 @@ export interface RecipeImage {
 interface PreparationStep {
     ingredients: Ingredient[];
     text: string;
-    tips: any[];
+    tips: unknown[];
 }
 
 interface PopularityInformation {

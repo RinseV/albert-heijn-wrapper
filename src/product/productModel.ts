@@ -1,15 +1,15 @@
 export interface SingleProductModel {
     disclaimerText: string;
-    productCard: SingleProductModel;
+    productCard: ProductModel;
     productId: number;
-    properties: Properties2;
+    properties: Properties;
     tradeItem: TradeItem;
 }
 
 interface TradeItem {
     additionalTradeItemIdentification: AdditionalTradeItemIdentification[];
     allergenInformation: AllergenInformation[];
-    certificationInformation: any[];
+    certificationInformation: unknown[];
     consumerInstructions: ConsumerInstructions;
     contactInformation: ContactInformation[];
     description: Description;
@@ -22,13 +22,13 @@ interface TradeItem {
     nutritionalInformation: NutritionalInformation;
     packagingMarking: PackagingMarking;
     placeOfItemActivity: PlaceOfItemActivity;
-    referencedFileDetailInformation: any[];
+    referencedFileDetailInformation: unknown[];
     regulatoryInformation: RegulatoryInformation[];
-    safetyDataSheetInformation: any[];
+    safetyDataSheetInformation: unknown[];
 }
 
 interface RegulatoryInformation {
-    permitIdentification: any[];
+    permitIdentification: unknown[];
     regulationTypeCode: TypeCode[];
 }
 
@@ -37,12 +37,12 @@ interface PlaceOfItemActivity {
 }
 
 interface PlaceOfProductActivity {
-    productActivityDetails: any[];
-    provenanceStatement: any[];
+    productActivityDetails: unknown[];
+    provenanceStatement: unknown[];
 }
 
 interface PackagingMarking {
-    labelAccreditationCode: any[];
+    labelAccreditationCode: unknown[];
     localPackagingMarkedLabelAccreditationCodeReference: LocalPackagingMarkedLabelAccreditationCodeReference[];
 }
 
@@ -53,7 +53,7 @@ interface LocalPackagingMarkedLabelAccreditationCodeReference {
 
 interface NutritionalInformation {
     nutrientHeaders: NutrientHeader[];
-    nutritionalClaim: any[];
+    nutritionalClaim: unknown[];
 }
 
 interface NutrientHeader {
@@ -74,10 +74,8 @@ interface NutrientDetail {
 
 interface Measurements {
     netContent: NetContent[];
-    weight: Weight;
+    weight: unknown;
 }
-
-interface Weight {}
 
 interface NetContent {
     measurementUnitCode: TypeCode;
@@ -85,16 +83,16 @@ interface NetContent {
 }
 
 interface Lifespan {
-    itemPeriodSafeToUseAfterOpening: any[];
+    itemPeriodSafeToUseAfterOpening: unknown[];
 }
 
 interface HealthWellnessPackagingMarking {
-    packagingMarkedDietAllergenCode: any[];
+    packagingMarkedDietAllergenCode: unknown[];
     packagingMarkedFreeFromCode: TypeCode[];
 }
 
 interface FoodAndBeveragePreparationServing {
-    preparationServing: any[];
+    preparationServing: unknown[];
     servingQuantityInformation: ServingQuantityInformation;
 }
 
@@ -124,7 +122,7 @@ interface CommunicationChannel {
 
 interface ConsumerInstructions {
     storageInstructions: string[];
-    usageInstructions: any[];
+    usageInstructions: unknown[];
 }
 
 interface AllergenInformation {
@@ -146,7 +144,7 @@ interface TypeCode {
     value: string;
 }
 
-interface Properties2 {
+interface Properties {
     nutriscore: string[];
     sp_exclude_dieet_biologisch: string[];
     sp_exclude_dieet_laag_suiker: string[];
@@ -176,7 +174,7 @@ export interface ProductModel {
     brand: string;
     descriptionFull: string;
     descriptionHighlights: string;
-    extraDescriptions: any[];
+    extraDescriptions: unknown[];
     hqId: number;
     images: Image[];
     isBonus: boolean;
@@ -184,47 +182,23 @@ export interface ProductModel {
     isOrderable: boolean;
     isPreviouslyBought: boolean;
     isSample: boolean;
+    isSponsored: boolean;
     isStapelBonus: boolean;
+    isVirtualBundle: boolean;
     mainCategory: string;
     nix18: boolean;
+    nutriscore: string;
     orderAvailabilityStatus: string;
     priceBeforeBonus: number;
-    properties: Properties;
+    properties?: Properties;
     propertyIcons: string[];
     salesUnitSize: string;
     shopType: string;
     subCategory: string;
-    subCategoryId: number;
+    subCategoryId?: number;
     title: string;
     unitPriceDescription: string;
     webshopId: number;
-}
-
-interface Properties {
-    np_goedkoopje: string[];
-    np_verpakking: string[];
-    nutriscore: string[];
-    sp_exclude_dieet_biologisch: string[];
-    sp_exclude_dieet_laag_suiker: string[];
-    sp_exclude_dieet_veganistisch: string[];
-    sp_exclude_intolerance_geen_lactose: string[];
-    sp_exclude_intolerance_geen_melk: string[];
-    sp_include_dieet_laag_vet: string[];
-    sp_include_dieet_laag_zout: string[];
-    sp_include_dieet_vegetarisch: string[];
-    sp_include_intolerance_geen_eieren: string[];
-    sp_include_intolerance_geen_gluten: string[];
-    sp_include_intolerance_geen_kreeftachtigen: string[];
-    sp_include_intolerance_geen_lupine: string[];
-    sp_include_intolerance_geen_mosterd: string[];
-    sp_include_intolerance_geen_noten: string[];
-    sp_include_intolerance_geen_pindas: string[];
-    sp_include_intolerance_geen_schelpdieren: string[];
-    sp_include_intolerance_geen_selderij: string[];
-    sp_include_intolerance_geen_sesam: string[];
-    sp_include_intolerance_geen_soja: string[];
-    sp_include_intolerance_geen_sulfiet: string[];
-    sp_include_intolerance_geen_vis: string[];
 }
 
 interface Image {

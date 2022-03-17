@@ -6,5 +6,8 @@ src
 .gitignore
 .npmignore
 .prettierrc
+rollup.config.ts
+tsconfig.json
+.gitattributes
 yarn-error.log
 node_modules/

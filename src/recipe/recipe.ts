@@ -8,16 +8,8 @@ export class Recipe extends AHObject {
      * Get recipe from ID
      * @param recipeId Recipe ID
      */
-    async getRecipeFromId(
-        recipeId: number,
-        headers?: Headers,
-        query?: Query
-    ): Promise<RecipeModel> {
-        return await this.ah.get(
-            `mobile-services/recipes/v1/recipe/${recipeId}`,
-            headers,
-            query
-        );
+    async getRecipeFromId(recipeId: number, headers?: Headers, query?: Query): Promise<RecipeModel> {
+        return await this.ah.get(`mobile-services/recipes/v1/recipe/${recipeId}`, headers, query);
     }
 
     /**
@@ -37,7 +29,7 @@ export class Recipe extends AHObject {
             query: recipeName,
             filters: filter ? this.translateRecipeFilterToQuery(filter) : '',
             sortBy: (sort ? sort : '').toString(),
-            ...query,
+            ...query
         });
     }
 
@@ -54,28 +46,18 @@ export class Recipe extends AHObject {
         headers?: Headers,
         query?: Query
     ): Promise<RecipeModel> {
-        const recipes = await this.getRecipeFromName(
-            recipeName,
-            filter,
-            sort,
-            headers,
-            query
-        );
+        const recipes = await this.getRecipeFromName(recipeName, filter, sort, headers, query);
         if (!recipes.content[0]) {
             throw new Error('No recipes found');
         }
-        return await this.getRecipeFromId(
-            recipes.content[0].id,
-            headers,
-            query
-        );
+        return await this.getRecipeFromId(recipes.content[0].id, headers, query);
     }
 
     /**
      * Translates the recipe filters to a usable filter query
      */
     private translateRecipeFilterToQuery(filter: RecipeFilter): string {
-        let out: string[] = [];
+        const out: string[] = [];
         if (filter.oftenUsedFilter) {
             out.push(`veel-gebruikt:${filter.oftenUsedFilter}`);
         }
@@ -114,7 +96,7 @@ export enum RecipeSortOptions {
     Newest = 'NEWEST',
     Relevant = 'MOST_RELEVANT',
     Rating = 'RATINGS',
-    PrepTime = 'TOTAl_TIME',
+    PrepTime = 'TOTAl_TIME'
 }
 
 /**
@@ -157,7 +139,7 @@ export enum KitchenOriginRecipeFilterOptions {
     Suriname = 'surinaams',
     Vietnamese = 'vietnamees',
     Argentine = 'argentijns',
-    SouthAfrican = 'zuid-afrikaans',
+    SouthAfrican = 'zuid-afrikaans'
 }
 
 export enum TechniqueRecipeFilterOptions {
@@ -170,14 +152,14 @@ export enum TechniqueRecipeFilterOptions {
     Frying = 'frituren',
     Steam = 'stomen',
     Poaching = 'pocheren',
-    Blanching = 'blancheren',
+    Blanching = 'blancheren'
 }
 
 export enum SeasonRecipeFilterOptions {
     Winter = 'winter',
     Summer = 'zomer',
     Autumn = 'herfst',
-    Spring = 'lente',
+    Spring = 'lente'
 }
 
 export enum SpecialOccasionRecipeFilterOptions {
@@ -190,7 +172,7 @@ export enum SpecialOccasionRecipeFilterOptions {
     Birthday = 'verjaardag',
     NewYears = 'oud-en-nieuw',
     MothersDay = 'moederdag',
-    Treat = 'traktatie',
+    Treat = 'traktatie'
 }
 
 export enum WishesRecipeFilterOptions {
@@ -200,7 +182,7 @@ export enum WishesRecipeFilterOptions {
     NoMeatOrFish = 'zonder-vlees-vis',
     Vegan = 'veganistisch',
     NoMeat = 'zonder-vlees',
-    Healthy = 'gezond',
+    Healthy = 'gezond'
 }
 
 export enum ContentRecipeFilterOptions {
@@ -208,7 +190,7 @@ export enum ContentRecipeFilterOptions {
     Meat = 'vlees',
     Fish = 'vis',
     Shellfish = 'schaal-schelpdieren',
-    MeatSubstitute = 'vleesvervanger',
+    MeatSubstitute = 'vleesvervanger'
 }
 
 export enum DishTypeRecipeFilterOptions {
@@ -221,7 +203,7 @@ export enum DishTypeRecipeFilterOptions {
     Quiche = 'quiche',
     Stew = 'stamppot',
     SauceDressing = 'saus-dressing',
-    Couscous = 'couscous',
+    Couscous = 'couscous'
 }
 
 export enum CourseRecipeFilterOptions {
@@ -234,7 +216,7 @@ export enum CourseRecipeFilterOptions {
     Pastry = 'gebak',
     Breakfast = 'ontbijt',
     Brunch = 'brunch',
-    DrinkNoAlcohol = 'drankje-zonder-alcohol',
+    DrinkNoAlcohol = 'drankje-zonder-alcohol'
 }
 
 export enum OftenUsedRecipeFilterOptions {
@@ -242,5 +224,5 @@ export enum OftenUsedRecipeFilterOptions {
     Fast = 'snel',
     Budget = 'budget',
     Slim = 'slank',
-    NowInMagazine = 'nu-in-het-magazine',
+    NowInMagazine = 'nu-in-het-magazine'
 }

@@ -1,12 +1,6 @@
-import { AHObject } from '../base/AHObject';
 import { Headers, Query } from '../ah';
-import {
-    OpeningHour,
-    OpeningHourDate,
-    StoreModel,
-    StoreQueryModel,
-} from './storeModel';
-import { parse } from 'date-fns';
+import { AHObject } from '../base/AHObject';
+import { StoreModel, StoreQueryModel } from './storeModel';
 
 export class Store extends AHObject {
     /**
@@ -22,12 +16,21 @@ export class Store extends AHObject {
         headers?: Headers,
         query?: Query
     ): Promise<StoreQueryModel> {
-        return await this.ah.get(`mobile-services/v1/stores`, headers, {
-            latitude: latitude.toString(),
-            longitude: longitude.toString(),
-            maxResults: (maxResults ? maxResults : 12).toString(),
-            ...query,
-        });
+        return await this.ah.post(
+            'graphql',
+            {
+                operationName: 'SearchStoresQuery',
+                query: 'query SearchStoresQuery($latitude: Float!, $longitude: Float!, $openingHours: [StoreOpeningHoursInput!], $maxResults: PageSize!) { stores(filter: {location: {latitude: $latitude, longitude: $longitude}, openingHours: $openingHours}, size: $maxResults) { __typename result { __typename ...Store } } } fragment Store on Store { __typename id address { __typename street houseNumber houseNumberExtra postalCode city countryCode } openingDays { __typename date openingHour { __typename openFrom openUntil } nextWeekDate nextWeekOpeningHour { __typename openFrom openUntil } } geoLocation { __typename latitude longitude } phone storeType }',
+                variables: {
+                    latitude: latitude,
+                    longitude: longitude,
+                    maxResults: maxResults ? maxResults : 12,
+                    openingHours: []
+                }
+            },
+            headers,
+            query
+        );
     }
 
     /**
@@ -41,29 +44,7 @@ export class Store extends AHObject {
         headers?: Headers,
         query?: Query
     ): Promise<StoreModel> {
-        const stores = await this.getStoresFromLocation(
-            latitude,
-            longitude,
-            1,
-            headers,
-            query
-        );
-        return stores.stores[0];
+        const stores = await this.getStoresFromLocation(latitude, longitude, 1, headers, query);
+        return stores.data.stores.result[0];
     }
-}
-
-/**
- * Helper function that converts the given OpeningHour[] to an array with Date objects
- */
-export function convertOpeningHoursToDates(
-    openingHours: OpeningHour[]
-): OpeningHourDate[] {
-    return openingHours.map((openingTime) => {
-        const date = parse(openingTime.date, 'yyyy-MM-dd', new Date());
-        return {
-            date: date,
-            openFrom: parse(openingTime.openFrom, 'HHmm', date),
-            openUntil: parse(openingTime.openUntil, 'HHmm', date),
-        };
-    });
 }

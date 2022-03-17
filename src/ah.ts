@@ -4,7 +4,7 @@ import { Product } from './product/product';
 import { Recipe } from './recipe/recipe';
 import { Store } from './store/store';
 
-const endpoint = 'https://ms.ah.nl/';
+const endpoint = 'https://api.ah.nl/';
 
 export class AH {
     private readonly client: AxiosInstance;
@@ -36,43 +36,18 @@ export class AH {
         return this.AHStore;
     }
 
-    async post(
-        path: string,
-        body: any,
-        extraHeaders?: Headers,
-        query?: Query,
-        noAuth?: boolean
-    ) {
-        return this.request(
-            path,
-            requestMethod.POST,
-            body,
-            extraHeaders,
-            query,
-            noAuth
-        );
+    async post(path: string, body: Record<string, unknown>, extraHeaders?: Headers, query?: Query, noAuth?: boolean) {
+        return this.request(path, requestMethod.POST, body, extraHeaders, query, noAuth);
     }
 
-    async get(
-        path: string,
-        extraHeaders?: Headers,
-        query?: Query,
-        noAuth?: boolean
-    ) {
-        return this.request(
-            path,
-            requestMethod.GET,
-            undefined,
-            extraHeaders,
-            query,
-            noAuth
-        );
+    async get(path: string, extraHeaders?: Headers, query?: Query, noAuth?: boolean) {
+        return this.request(path, requestMethod.GET, undefined, extraHeaders, query, noAuth);
     }
 
     async request(
         path: string,
         method: requestMethod,
-        body?: any,
+        body?: Record<string, unknown>,
         extraHeaders?: Headers,
         query?: Query,
         noAuth?: boolean
@@ -85,12 +60,9 @@ export class AH {
         }
 
         // Since a token is needed for every request, just always add it
-        let requestHeader: Headers = this.createHeader(
-            token?.access_token,
-            extraHeaders
-        );
+        const requestHeader: Headers = this.createHeader(token?.access_token, extraHeaders);
 
-        let url = this.createURL(path, query);
+        const url = this.createURL(path, query);
 
         if (this.verbose) {
             console.log(url);
@@ -99,11 +71,11 @@ export class AH {
             void (body && console.log(body));
         }
 
-        let response = await this.client.request({
+        const response = await this.client.request({
             method: method,
             url: url,
             headers: requestHeader,
-            data: body,
+            data: body
         });
 
         if (!response.statusText) {
@@ -120,10 +92,12 @@ export class AH {
      */
     createHeader(token?: string, extraHeaders?: Headers): Headers {
         // Create header
-        let headers: Headers = {
+        const headers: Headers = {
             'Content-Type': 'application/json',
             'User-Agent': 'ah-wrapper',
-            ...extraHeaders,
+            'client-name': 'appie-android',
+            'client-version': '8.12',
+            ...extraHeaders
         };
 
         if (token) {
@@ -160,7 +134,7 @@ export class AH {
 export enum requestMethod {
     GET = 'GET',
     POST = 'POST',
-    PUT = 'PUT',
+    PUT = 'PUT'
 }
 
 /**

@@ -8,16 +8,8 @@ export class Product extends AHObject {
      * Get product from ID
      * @param productId Product ID
      */
-    async getProductFromId(
-        productId: number,
-        headers?: Headers,
-        query?: Query
-    ): Promise<SingleProductModel> {
-        return await this.ah.get(
-            `mobile-services/product/detail/v4/fir/${productId}`,
-            headers,
-            query
-        );
+    async getProductFromId(productId: number, headers?: Headers, query?: Query): Promise<SingleProductModel> {
+        return await this.ah.get(`mobile-services/product/detail/v4/fir/${productId}`, headers, query);
     }
 
     /**
@@ -35,7 +27,7 @@ export class Product extends AHObject {
     ): Promise<ProductQueryModel> {
         // We make a new query since we can only have the 'sortOn' and 'filters' fields if those options are provided
         const totalQuery: Query = {
-            query: productName,
+            query: productName
         };
         if (sort) {
             totalQuery['sortOn'] = sort.toString();
@@ -45,7 +37,7 @@ export class Product extends AHObject {
         }
         return await this.ah.get(`mobile-services/product/search/v2`, headers, {
             ...totalQuery,
-            ...query,
+            ...query
         });
     }
 
@@ -62,13 +54,7 @@ export class Product extends AHObject {
         headers?: Headers,
         query?: Query
     ): Promise<ProductModel> {
-        const products = await this.getProductsFromName(
-            productName,
-            filter,
-            sort,
-            headers,
-            query
-        );
+        const products = await this.getProductsFromName(productName, filter, sort, headers, query);
         return products.products[0];
     }
 
@@ -76,7 +62,7 @@ export class Product extends AHObject {
      * Translates the product filters to a usable filter query
      */
     private translateProductFilterToQuery(filter: ProductFilter): string {
-        let out: string[] = [];
+        const out: string[] = [];
         if (filter.brand) {
             out.push(`brand=${filter.brand}`);
         }
@@ -99,7 +85,7 @@ export class Product extends AHObject {
 export enum ProductSortOptions {
     Relevant = 'RELEVANCE',
     PriceDesc = 'PRICEHIGHLOW',
-    PriceAsc = 'PRICELOWHIGH',
+    PriceAsc = 'PRICELOWHIGH'
 }
 
 /**
@@ -146,5 +132,5 @@ export enum ProductPropertyFilter {
     LowFatDiet = 'sp_include_dieet_laag_vet',
     LowSaltDiet = 'sp_include_dieet_laag_zout',
     Vegan = 'sp_include_dieet_veganistisch',
-    Vegeterian = 'sp_include_dieet_vegetarisch',
+    Vegeterian = 'sp_include_dieet_vegetarisch'
 }

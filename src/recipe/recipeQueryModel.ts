@@ -4,6 +4,7 @@ export interface RecipeQueryModel {
     content: Content[];
     filters: Filter[];
     links: Link[];
+    mmiBannerUrl: string;
     page: Page;
     totalCount: number;
 }
