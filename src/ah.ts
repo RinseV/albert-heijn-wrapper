@@ -1,27 +1,47 @@
 import axios, { AxiosInstance } from 'axios';
 import { TokenHandler } from './auth/tokenHandler';
+import { Bonus } from './bonus/bonus';
+import { Category } from './category/category';
 import { Product } from './product/product';
 import { Recipe } from './recipe/recipe';
 import { Store } from './store/store';
 
 const endpoint = 'https://api.ah.nl/';
 
+export interface AHClientOptions {
+    verbose?: boolean;
+}
+
 export class AH {
     private readonly client: AxiosInstance;
-    private readonly tokenHandler: TokenHandler;
+    public readonly tokenHandler: TokenHandler;
 
+    private verbose: boolean;
+
+    private readonly AHBonus: Bonus;
+    private readonly AHCategory: Category;
     private readonly AHProduct: Product;
     private readonly AHRecipe: Recipe;
     private readonly AHStore: Store;
 
-    constructor(private readonly verbose?: boolean) {
-        // Create https agent for TLSv1.2 or less (API doesn't respond to TLSv1.3+)
+    constructor(options?: AHClientOptions) {
+        this.verbose = options?.verbose ?? false;
         this.client = axios.create();
         this.tokenHandler = new TokenHandler(this);
 
+        this.AHBonus = new Bonus(this);
+        this.AHCategory = new Category(this);
         this.AHProduct = new Product(this);
         this.AHRecipe = new Recipe(this);
         this.AHStore = new Store(this);
+    }
+
+    bonus() {
+        return this.AHBonus;
+    }
+
+    category() {
+        return this.AHCategory;
     }
 
     product() {
@@ -36,33 +56,35 @@ export class AH {
         return this.AHStore;
     }
 
-    async post(path: string, body: Record<string, unknown>, extraHeaders?: Headers, query?: Query, noAuth?: boolean) {
-        return this.request(path, requestMethod.POST, body, extraHeaders, query, noAuth);
+    async post(
+        path: string,
+        body: Record<string, unknown>,
+        additionalRequestOptions?: AdditionalRequestOptions,
+        noAuth?: boolean
+    ) {
+        return this.request(path, requestMethod.POST, body, additionalRequestOptions, noAuth);
     }
 
-    async get(path: string, extraHeaders?: Headers, query?: Query, noAuth?: boolean) {
-        return this.request(path, requestMethod.GET, undefined, extraHeaders, query, noAuth);
+    async get(path: string, additionalRequestOptions?: AdditionalRequestOptions, noAuth?: boolean) {
+        return this.request(path, requestMethod.GET, undefined, additionalRequestOptions, noAuth);
     }
 
     async request(
         path: string,
         method: requestMethod,
         body?: Record<string, unknown>,
-        extraHeaders?: Headers,
-        query?: Query,
+        additionalRequestOptions?: AdditionalRequestOptions,
         noAuth?: boolean
     ) {
-        let token;
         if (!noAuth) {
             // Make sure tokenHandler is ready (has a token)
             await this.tokenHandler.Ready;
-            token = await this.tokenHandler.getToken();
         }
 
         // Since a token is needed for every request, just always add it
-        const requestHeader: Headers = this.createHeader(token?.access_token, extraHeaders);
+        const requestHeader: Headers = await this.createHeader(!noAuth, additionalRequestOptions?.headers);
 
-        const url = this.createURL(path, query);
+        const url = this.createURL(path, additionalRequestOptions?.query);
 
         if (this.verbose) {
             console.log(url);
@@ -90,7 +112,7 @@ export class AH {
      * Helper function to create headers for request
      * @param extraHeaders Any extra header options
      */
-    createHeader(token?: string, extraHeaders?: Headers): Headers {
+    async createHeader(authRequired?: boolean, extraHeaders?: Headers): Promise<Headers> {
         // Create header
         const headers: Headers = {
             'Content-Type': 'application/json',
@@ -100,8 +122,9 @@ export class AH {
             ...extraHeaders
         };
 
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
+        if (authRequired && this.tokenHandler) {
+            const token = await this.tokenHandler.getToken();
+            headers['Authorization'] = `Bearer ${token.access_token}`;
         }
 
         // Return the headers
@@ -146,4 +169,12 @@ export interface Query {
 
 export interface Headers {
     [key: string]: string;
+}
+
+/**
+ * Interface that combines additional headers and query options
+ */
+export interface AdditionalRequestOptions {
+    headers?: Headers;
+    query?: Query;
 }

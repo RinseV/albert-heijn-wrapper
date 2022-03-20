@@ -9,7 +9,7 @@ export class TokenHandler {
 
     constructor(private readonly ah: AH) {
         this.Ready = new Promise((resolve, reject) => {
-            this.getAnonymousMemberToken()
+            this.getToken()
                 .then(() => {
                     resolve(undefined);
                 })
@@ -44,7 +44,6 @@ export class TokenHandler {
             {
                 clientId: 'appie'
             },
-            undefined,
             undefined,
             true
         );

@@ -1,4 +1,4 @@
-import { Headers, Query } from '../ah';
+import { AdditionalRequestOptions } from '../ah';
 import { AHObject } from '../base/AHObject';
 import { StoreModel, StoreQueryModel } from './storeModel';
 
@@ -13,8 +13,7 @@ export class Store extends AHObject {
         latitude: number,
         longitude: number,
         maxResults?: number,
-        headers?: Headers,
-        query?: Query
+        additionalRequestOptions?: AdditionalRequestOptions
     ): Promise<StoreQueryModel> {
         return await this.ah.post(
             'graphql',
@@ -28,8 +27,7 @@ export class Store extends AHObject {
                     openingHours: []
                 }
             },
-            headers,
-            query
+            additionalRequestOptions
         );
     }
 
@@ -41,10 +39,9 @@ export class Store extends AHObject {
     async getClosestStoreFromLocation(
         latitude: number,
         longitude: number,
-        headers?: Headers,
-        query?: Query
+        additionalRequestOptions?: AdditionalRequestOptions
     ): Promise<StoreModel> {
-        const stores = await this.getStoresFromLocation(latitude, longitude, 1, headers, query);
+        const stores = await this.getStoresFromLocation(latitude, longitude, 1, additionalRequestOptions);
         return stores.data.stores.result[0];
     }
 }

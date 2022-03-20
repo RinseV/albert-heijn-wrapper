@@ -11,3 +11,12 @@ tsconfig.json
 .gitattributes
 yarn-error.log
 node_modules/
+.nvmrc
+.gitattributes
+.env.example
+coverage
+test
+jest.config.ts
+.github
+*.tgz
+.eslintrc.js

@@ -28,51 +28,17 @@ then
 import { AH } from 'albert-heijn-wrapper';
 ```
 
-## Usage
+## Basic usage
 ```javascript
 // Creates AH object, set verbose=true if you want to see all requests
 const ah = new AH(verbose);
 // Gets product as reponse from ID
 const product = await ah.product().getProductFromId(200486);
 ```
+More information about the functions and parameters can be found on the [wiki](https://github.com/RinseV/jumbo-wrapper/wiki).
 
-### Functions
-#### Products
-```javascript
-// Gets product from product ID
-AH.product().getProductFromId(productId);
-// Gets products that match the name with optional filter and sort options
-AH.product().getProductsFromName(productName, filter, sort);
-// Gets the first product that matches the name with optional filter and sort options
-AH.product().getFirstProductFromName(productName, filter, sort);
-```
-
-#### Stores
-```javascript
-// Gets the closest stores from the given location (sorted by distance ascending)
-AH.store().getStoresFromLocation(latitude, longitude, maxResults);
-// Gets the closest store from given location
-AH.store().getClosestStoreFromLocation(latitude, longitude);
-```
-
-#### Recipes
-```javascript
-// Gets recipe from recipe ID
-AH.recipe().getRecipeFromId(recipeId);
-// Gets the recipes that match the name with optional filter and sort options
-AH.recipe().getRecipeFromName(recipeName, filter, sort);
-// Gets the first recipe that matches the name with optional filter and sort options
-AH.recipe().getFirstRecipeFromName(recipeName, filter, sort);
-```
-
-### Filtering and sorting
-#### Products
-It is possible to use certain product filters and sort options, these are provided via the ``ProductFilter`` and ``ProductSortOptions`` interface and enum respectively. The following sort options are available for products: relevant, price descending, price ascending. Products can also be filtered by brand (name), type (number), properties (described in ``ProductPropertyFilter``) and whether they are currently in the bonus or not.
-
-#### Recipes
-It is possible to use certain recipe filters and sort options, these are provided via the RecipeFilter and RecipeSortOptions interface and enum respectively. The following sort options are available for products: newest, relevant, rating, preperation time. Recipes can also be filtered via enums, namely ``OftenUsedRecipeFilterOptions``, ``CourseRecipeFilterOptions``, ``DishTypeRecipeFilterOptions``, ``ContentRecipeFilterOptions``, ``WishesRecipeFilterOptions``, ``SpecialOccasionRecipeFilterOptions``, ``SeasonRecipeFilterOptions``, ``TechniqueRecipeFilterOptions`` and ``KitchenOriginRecipeFilterOptions``.
-
-### Example usage
+## Example usage
+For all of these examples, please keep in mind that your function in which you request something should be `async` since the requests return a `Promise`.
 #### Products
 Let's say I want to find the names of the products called "Brood" but the products have to be gluten free, vegan and of the brand "AH Glutenvrij" and I want to sort on ascending price:
 ```javascript
@@ -134,8 +100,5 @@ findNearestStore(50, 4);
 Wilhelminalaan 9, 4551EP
 ```
 
-### Advanced usage
-Every request can also be provided with additional headers and queries.
-
-## Auth
+## Authentication
 Unfortunately, it is not possible to log in with your personal AH account, which means you won't be able to access your orders.

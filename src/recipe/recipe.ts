@@ -1,56 +1,46 @@
-import { Headers, Query } from '../ah';
-import { AHObject } from '../base/AHObject';
+import { AdditionalRequestOptions } from '../ah';
+import { AHObject, PaginationOptions } from '../base/AHObject';
 import { RecipeModel } from './recipeModel';
 import { RecipeQueryModel } from './recipeQueryModel';
+
+export interface RecipeOptions extends PaginationOptions {
+    filter?: RecipeFilter;
+    sort?: RecipeSortOptions;
+}
 
 export class Recipe extends AHObject {
     /**
      * Get recipe from ID
      * @param recipeId Recipe ID
      */
-    async getRecipeFromId(recipeId: number, headers?: Headers, query?: Query): Promise<RecipeModel> {
-        return await this.ah.get(`mobile-services/recipes/v1/recipe/${recipeId}`, headers, query);
+    async getRecipeFromId(recipeId: number, additionalRequestOptions?: AdditionalRequestOptions): Promise<RecipeModel> {
+        return await this.ah.get(`mobile-services/recipes/v1/recipe/${recipeId}`, additionalRequestOptions);
     }
 
     /**
      * Get recipes from given recipe name
      * @param recipeName Recipe name to search for
-     * @param filter Recipe filters (from RecipeFilter)
-     * @param sort Recipe sort (from RecipeSortOptions)
+     * @param options Options for the query
+     * @param options.page Page number (default 0)
+     * @param options.size Number of products per page (default 10)
+     * @param options.filter Recipe filters (from RecipeFilter)
+     * @param options.sort Recipe sort (from RecipeSortOptions)
      */
     async getRecipeFromName(
         recipeName: string,
-        filter?: RecipeFilter,
-        sort?: RecipeSortOptions,
-        headers?: Headers,
-        query?: Query
+        options?: RecipeOptions,
+        additionalRequestOptions?: AdditionalRequestOptions
     ): Promise<RecipeQueryModel> {
-        return await this.ah.get(`mobile-services/recipes/v2/search`, headers, {
-            query: recipeName,
-            filters: filter ? this.translateRecipeFilterToQuery(filter) : '',
-            sortBy: (sort ? sort : '').toString(),
-            ...query
+        return await this.ah.get(`mobile-services/recipes/v2/search`, {
+            query: {
+                query: recipeName,
+                filters: options?.filter ? this.translateRecipeFilterToQuery(options.filter) : '',
+                sortBy: (options?.sort ? options.sort : '').toString(),
+                page: (options?.page ?? 0).toString(),
+                size: (options?.size ?? 10).toString()
+            },
+            ...additionalRequestOptions
         });
-    }
-
-    /**
-     * Shortcut function to get the first recipe when searching for name
-     * @param recipeName Recipe name to search for
-     * @param filter Recipe filters (from RecipeFilter)
-     * @param sort Recipe sort (from RecipeSortOptions)
-     */
-    async getFirstRecipeFromName(
-        recipeName: string,
-        filter?: RecipeFilter,
-        sort?: RecipeSortOptions,
-        headers?: Headers,
-        query?: Query
-    ): Promise<RecipeModel> {
-        const recipes = await this.getRecipeFromName(recipeName, filter, sort, headers, query);
-        if (!recipes.content[0]) {
-            throw new Error('No recipes found');
-        }
-        return await this.getRecipeFromId(recipes.content[0].id, headers, query);
     }
 
     /**
