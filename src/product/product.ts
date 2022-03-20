@@ -1,61 +1,58 @@
-import { AHObject } from '../base/AHObject';
-import { Headers, Query } from '../ah';
-import { ProductModel, SingleProductModel } from './productModel';
+import { AdditionalRequestOptions, Query } from '../ah';
+import { AHObject, PaginationOptions } from '../base/AHObject';
+import { SingleProductModel } from './productModel';
 import { ProductQueryModel } from './productQueryModel';
+
+export interface ProductOptions extends PaginationOptions {
+    filter?: ProductFilter;
+    sort?: ProductSortOptions;
+    categoryId?: number;
+}
 
 export class Product extends AHObject {
     /**
      * Get product from ID
      * @param productId Product ID
      */
-    async getProductFromId(productId: number, headers?: Headers, query?: Query): Promise<SingleProductModel> {
-        return await this.ah.get(`mobile-services/product/detail/v4/fir/${productId}`, headers, query);
+    async getProductFromId(
+        productId: number,
+        additionalRequestOptions?: AdditionalRequestOptions
+    ): Promise<SingleProductModel> {
+        return await this.ah.get(`mobile-services/product/detail/v4/fir/${productId}`, additionalRequestOptions);
     }
 
     /**
      * Get products from given product name
      * @param productName Product name to search for
-     * @param filter Producter filter (from ProductFilter)
-     * @param sort Sort options (from ProductSortOptions)
+     * @param options Options for the query
+     * @param options.page Page number (default 0)
+     * @param options.size Number of products per page (default 10)
+     * @param options.filter Producter filter (from ProductFilter)
+     * @param options.sort Sort options (from ProductSortOptions)
+     * @param options.categoryId Category ID to filter products by
      */
     async getProductsFromName(
         productName: string,
-        filter?: ProductFilter,
-        sort?: ProductSortOptions,
-        headers?: Headers,
-        query?: Query
+        options?: ProductOptions,
+        additionalRequestOptions?: AdditionalRequestOptions
     ): Promise<ProductQueryModel> {
         // We make a new query since we can only have the 'sortOn' and 'filters' fields if those options are provided
         const totalQuery: Query = {
-            query: productName
+            query: productName,
+            sortOn: (options?.sort ?? '').toString(),
+            taxonomyId: (options?.categoryId ?? '').toString(),
+            page: (options?.page ?? 0).toString(),
+            size: (options?.size ?? 10).toString()
         };
-        if (sort) {
-            totalQuery['sortOn'] = sort.toString();
+        if (options?.filter) {
+            totalQuery['filters'] = this.translateProductFilterToQuery(options.filter);
         }
-        if (filter) {
-            totalQuery['filters'] = this.translateProductFilterToQuery(filter);
-        }
-        return await this.ah.get(`mobile-services/product/search/v2`, headers, {
-            ...totalQuery,
-            ...query
+        return await this.ah.get(`mobile-services/product/search/v2`, {
+            query: {
+                ...totalQuery
+            },
+            ...additionalRequestOptions
         });
-    }
-
-    /**
-     * Shortcut function to get the first product when searching for a name
-     * @param productName Product name to search for
-     * @param filter Producter filter (from ProductFilter)
-     * @param sort Sort options (from ProductSortOptions)
-     */
-    async getFirstProductFromName(
-        productName: string,
-        filter?: ProductFilter,
-        sort?: ProductSortOptions,
-        headers?: Headers,
-        query?: Query
-    ): Promise<ProductModel> {
-        const products = await this.getProductsFromName(productName, filter, sort, headers, query);
-        return products.products[0];
     }
 
     /**
@@ -85,7 +82,8 @@ export class Product extends AHObject {
 export enum ProductSortOptions {
     Relevant = 'RELEVANCE',
     PriceDesc = 'PRICEHIGHLOW',
-    PriceAsc = 'PRICELOWHIGH'
+    PriceAsc = 'PRICELOWHIGH',
+    NutriScore = 'NUTRISCORE'
 }
 
 /**

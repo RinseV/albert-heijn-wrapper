@@ -201,7 +201,7 @@ export interface ProductModel {
     webshopId: number;
 }
 
-interface Image {
+export interface Image {
     height: number;
     url: string;
     width: number;
