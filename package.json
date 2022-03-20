@@ -1,43 +1,45 @@
 {
-    "name": "albert-heijn-wrapper",
-    "version": "1.0.3",
-    "description": "API wrapper for Albert Heijn",
-    "keywords": [
-        "albert",
-        "heijn",
-        "albert heijn"
-    ],
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "author": "RinseV",
-    "license": "MIT",
-    "scripts": {
-        "build": "rollup --config rollup.config.ts --configPlugin typescript",
-        "start": "ts-node src/ah.ts",
-        "lint": "eslint --ext .ts,.js ."
-    },
-    "dependencies": {
-        "axios": "^0.21.1",
-        "date-fns": "^2.17.0"
-    },
-    "devDependencies": {
-        "@rollup/plugin-typescript": "^8.3.1",
-        "@types/node": "^14.14.25",
-        "@typescript-eslint/eslint-plugin": "^5.15.0",
-        "@typescript-eslint/parser": "^5.15.0",
-        "eslint": "^8.11.0",
-        "eslint-config-prettier": "^8.5.0",
-        "prettier": "^2.6.0",
-        "rollup": "^2.70.1",
-        "ts-node": "^9.1.1",
-        "tsc": "^1.20150623.0",
-        "typescript": "^4.1.3"
-    },
-    "homepage": "https://github.com/RinseV/albert-heijn-wrapper",
-    "bugs": "https://github.com/RinseV/albert-heijn-wrapper/issues",
-    "repository": {
-        "url": "https://github.com/RinseV/albert-heijn-wrapper",
-        "type": "git"
-    },
-    "readme": ""
+  "name": "albert-heijn-wrapper",
+  "version": "1.1.0",
+  "description": "API wrapper for Albert Heijn",
+  "keywords": [
+    "albert",
+    "heijn",
+    "albert heijn"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "RinseV",
+  "license": "MIT",
+  "scripts": {
+    "build": "rollup --config rollup.config.ts --configPlugin typescript",
+    "start": "ts-node src/ah.ts",
+    "lint": "eslint --ext .ts,.js .",
+    "test": "jest"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "date-fns": "^2.17.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^8.3.1",
+    "@types/jest": "^27.4.1",
+    "@types/node": "^14.14.25",
+    "@typescript-eslint/eslint-plugin": "^5.15.0",
+    "@typescript-eslint/parser": "^5.15.0",
+    "jest": "^27.5.1",
+    "prettier": "^2.6.0",
+    "rollup": "^2.70.1",
+    "ts-jest": "^27.1.3",
+    "ts-node": "^9.1.1",
+    "tsc": "^1.20150623.0",
+    "typescript": "^4.1.3"
+  },
+  "homepage": "https://github.com/RinseV/albert-heijn-wrapper",
+  "bugs": "https://github.com/RinseV/albert-heijn-wrapper/issues",
+  "repository": {
+    "url": "https://github.com/RinseV/albert-heijn-wrapper",
+    "type": "git"
+  },
+  "readme": ""
 }
