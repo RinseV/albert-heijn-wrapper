@@ -13,7 +13,7 @@
   </p>
 </div>
 
-Node.js API wrapper for [Albert Heijn](https://www.ah.nl/).
+Unofficial Node.js API wrapper for [Albert Heijn](https://www.ah.nl/).
 
 ## Installation
 ```sh
@@ -24,14 +24,14 @@ or
 yarn add albert-heijn-wrapper
 ```
 then
-```javascript
+```typescript
 import { AH } from 'albert-heijn-wrapper';
 ```
 
 ## Basic usage
-```javascript
+```typescript
 // Creates AH object, set verbose=true if you want to see all requests
-const ah = new AH(verbose);
+const ah = new AH({ verbose: true });
 // Gets product as reponse from ID
 const product = await ah.product().getProductFromId(200486);
 ```
@@ -41,7 +41,7 @@ More information about the functions and parameters can be found on the [wiki](h
 For all of these examples, please keep in mind that your function in which you request something should be `async` since the requests return a `Promise`.
 #### Products
 Let's say I want to find the names of the products called "Brood" but the products have to be gluten free, vegan and of the brand "AH Glutenvrij" and I want to sort on ascending price:
-```javascript
+```typescript
 import { 
   AH,
   ProductFilter,
@@ -54,16 +54,14 @@ async function getGlutenFreeVeganBread() {
   const ah = new AH();
   // Initialise the filter with the brand and properties (gluten free and vegan)
   const filter: ProductFilter = {
-      brand: 'AH Glutenvrij',
-      property: [
-          ProductPropertyFilter.GlutenFree,
-          ProductPropertyFilter.Vegan,
-      ],
+      brand: "AH Glutenvrij",
+      property: [ProductPropertyFilter.GlutenFree, ProductPropertyFilter.Vegan]
   };
   // Search for all products on ascending price with the filter
-  const products = await ah
-      .product()
-      .getProductsFromName('Brood', filter, ProductSortOptions.PriceAsc);
+  const products = await ah.product().getProductsFromName("Brood", {
+      filter,
+      sort: ProductSortOptions.PriceAsc
+  });
   // Return only the names of the products
   const res = products.products.map((product) => {
       return product.title;
@@ -83,12 +81,12 @@ getGlutenFreeVeganBread();
 
 #### Stores
 Let's say I want to find the address of the nearest store to a given location:
-```javascript
+```typescript
 import { AH } from 'albert-heijn-wrapper';
 
 async function findNearestStore(latitude: number, longitude: number) {
     // Create AH object
-    const ah = new AH(true);
+    const ah = new AH();
     // Find nearest store
     const store = await ah.store().getClosestStoreFromLocation(latitude, longitude);
     console.log(`${store.address.street} ${store.address.houseNumber}, ${store.address.postalCode}`);
