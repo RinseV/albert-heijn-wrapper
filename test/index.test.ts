@@ -65,8 +65,9 @@ describe('AH client', () => {
         expect(headers).toStrictEqual({
             'Content-Type': 'application/json',
             'User-Agent': 'ah-wrapper',
-            'client-name': 'appie-android',
-            'client-version': '8.12'
+            'x-client-name': 'Appie',
+            'x-clientversion': '8.21.2',
+            'x-application': 'AHWEBSHOP'
         });
     });
 
@@ -77,8 +78,9 @@ describe('AH client', () => {
         expect(headers).toStrictEqual({
             'Content-Type': 'application/json',
             'User-Agent': 'ah-wrapper',
-            'client-name': 'appie-android',
-            'client-version': '8.12',
+            'x-client-name': 'Appie',
+            'x-clientversion': '8.21.2',
+            'x-application': 'AHWEBSHOP',
             Authorization: 'Bearer token'
         });
     });
