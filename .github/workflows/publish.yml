@@ -2,21 +2,19 @@ name: Publish
 
 on:
   release:
-    types: [created]
+    types: [ created ]
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
         with:
-          node-version: '14.x'
-          registry-url: 'https://registry.npmjs.org/'
+          version: 10
       - name: Install dependencies and build
-        run: yarn install && yarn build
-      - name: Publish on NPM 
-        run: yarn publish --access public
+        run: pnpm i && pnpm build
+      - name: Publish on NPM
+        run: pnpm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-

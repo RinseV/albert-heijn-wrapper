@@ -3,7 +3,7 @@ name: CI
 on: push
 
 jobs:
-  test:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -12,5 +12,5 @@ jobs:
           version: 10
       - name: Install dependencies
         run: pnpm i
-      - name: Run tests
-        run: pnpm test
+      - name: Run Biome
+        run: pnpm check
