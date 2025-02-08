@@ -16,87 +16,166 @@
 Unofficial Node.js API wrapper for [Albert Heijn](https://www.ah.nl/).
 
 ## Installation
+
 ```sh
 npm install albert-heijn-wrapper
 ```
+
 or
+
 ```sh
-yarn add albert-heijn-wrapper
+pnpm i albert-heijn-wrapper
 ```
+
 then
+
 ```typescript
 import { AH } from 'albert-heijn-wrapper';
 ```
 
 ## Basic usage
+
 ```typescript
-// Creates AH object, set verbose=true if you want to see all requests
-const ah = new AH({ verbose: true });
+// Creates AH object
+const ah = new AH();
 // Gets product as reponse from ID
-const product = await ah.product().getProductFromId(200486);
+const product = await ah.product.get(200486);
 ```
-More information about the functions and parameters can be found on the [wiki](https://github.com/RinseV/jumbo-wrapper/wiki).
+
+More information about the functions and parameters can be found on
+the [wiki](https://github.com/RinseV/jumbo-wrapper/wiki).
 
 ## Example usage
-For all of these examples, please keep in mind that your function in which you request something should be `async` since the requests return a `Promise`.
-#### Products
-Let's say I want to find the names of the products called "Brood" but the products have to be gluten free, vegan and of the brand "AH Glutenvrij" and I want to sort on ascending price:
-```typescript
-import { 
-  AH,
-  ProductFilter,
-  ProductPropertyFilter,
-  ProductSortOptions, 
-} from 'albert-heijn-wrapper';
 
-async function getGlutenFreeVeganBread() {
-  // First create an AH object
+For all of these examples, please keep in mind that your function in which you request something should be `async` since
+the requests return a `Promise`.
+
+### Products
+
+Let's say I want to find the names of the products called "Brood" but the products have to be gluten free, vegan and I
+want to sort on ascending price:
+
+```typescript
+import { AH, SearchProductsSortType } from 'albert-heijn-wrapper';
+
+const getGlutenFreeVeganBread = async () => {
   const ah = new AH();
-  // Initialise the filter with the brand and properties (gluten free and vegan)
-  const filter: ProductFilter = {
-      brand: "AH Glutenvrij",
-      property: [ProductPropertyFilter.GlutenFree, ProductPropertyFilter.Vegan]
-  };
-  // Search for all products on ascending price with the filter
-  const products = await ah.product().getProductsFromName("Brood", {
-      filter,
-      sort: ProductSortOptions.PriceAsc
+
+  const { products } = await ah.product.search("Brood", {
+    searchInput: {
+      // These facets are undocumented
+      facets: [
+        {
+          label: "product.properties.allergie",
+          values: {
+            values: ["zonder-gluten"]
+          }
+        },
+        {
+          label: "product.properties.dieet",
+          values: {
+            values: ["veganistisch"]
+          }
+        }
+      ],
+      page: {
+        size: 3
+      }
+    },
+    sortType: SearchProductsSortType.PriceHighLow
   });
-  // Return only the names of the products
-  const res = products.products.map((product) => {
-      return product.title;
-  });
-  console.log(res);
-}
+  // Map to just the product names
+  const names = products.map((product) => product.title);
+  console.log(names);
+};
 
 getGlutenFreeVeganBread();
 ```
+
 ```sh
 [
-  'AH Glutenvrij Pistolets meerzaden',
-  'AH Glutenvrij Mueslibroodjes',
-  'AH Glutenvrij Vezelrijke broodmix'
+  'BFree Pita broodjes glutenvrij',
+  'Smaakt Lijnzaadcrackers maanzaad less carb',
+  'BFree Naan bread gluten free'
 ]
 ```
 
-#### Stores
+### Stores
+
 Let's say I want to find the address of the nearest store to a given location:
+
 ```typescript
 import { AH } from 'albert-heijn-wrapper';
 
-async function findNearestStore(latitude: number, longitude: number) {
-    // Create AH object
-    const ah = new AH();
-    // Find nearest store
-    const store = await ah.store().getClosestStoreFromLocation(latitude, longitude);
-    console.log(`${store.address.street} ${store.address.houseNumber}, ${store.address.postalCode}`);
-}
+const findNearestStore = async (latitude: number, longitude: number) => {
+  const ah = new AH();
+  // Find nearest store
+  const { result } = await ah.store.search({
+    filter: {
+      location: {
+        latitude,
+        longitude
+      }
+    }
+  });
+  const store = result?.[0];
+  console.log(`${store?.address?.street} ${store?.address?.houseNumber}, ${store?.address?.postalCode} ${store?.address?.city}`);
+};
 
 findNearestStore(50, 4);
 ```
+
 ```sh
-Wilhelminalaan 9, 4551EP
+Westkade 48, 4551BV Sas Van Gent
 ```
 
 ## Authentication
-Unfortunately, it is not possible to log in with your personal AH account, which means you won't be able to access your orders.
+
+Unfortunately, it is not possible to log in with your personal AH account, which means you won't be able to access your
+orders. All requests are made as a guest user.
+
+## Custom request
+
+If you want to make your own GraphQL request, you can also do that:
+
+```typescript
+import { AH, Stores } from "albert-heijn-wrapper";
+
+const STORES_INFO_QUERY = `
+  query StoresInformation($id:Int!) {
+    storesInformation(id:$id) {
+      id
+      name
+      address {
+        street
+        houseNumber
+        houseNumberExtra
+        postalCode
+        city
+        countryCode
+      }
+    }
+  }
+`;
+
+type StoresInfoResponse = {
+  // Type is exported from the wrapper
+  storesInformation: Stores;
+};
+
+const getStoreInformation = async (id: number) => {
+  const ah = new AH();
+  const { storesInformation } = await ah.graphql<StoresInfoResponse>(STORES_INFO_QUERY, { id });
+  // Response is typed (somewhat) correctly
+  console.log(storesInformation.name);
+};
+
+// ID from store found from before
+getStoreInformation(1809);
+```
+
+```sh
+AH1809 SAS VAN GENT
+```
+
+The wrapper will automatically provide the access token necessary to make the request.
